@@ -39,11 +39,38 @@ public class FXMLController {
     @FXML
     void doContaArchi(ActionEvent event) {
 
+    	
+    	try {
+        	double soglia = Double.parseDouble(this.txtSoglia.getText());
+        	
+    		if(this.model.ifCompreso(soglia)==true) {
+    	
+    	this.txtResult.appendText("\nsoglia: "+soglia+" ---> Maggiori: "+this.model.getArchiMaggiori(soglia)+
+    			", Minori: "+this.model.getArchiMinori(soglia));
+    	}
+    	else {
+    		this.txtResult.setText("inserisci una soglia valida!");
+    		return;
+    	}
+    		
+    } catch (NumberFormatException e) {
+    	this.txtResult.setText("Inserisci un formato valido nel campo soglia!");
+    	
+    }
+    	
     }
 
     @FXML
     void doRicerca(ActionEvent event) {
 
+    	this.txtResult.clear();
+    	double soglia = Double.parseDouble(this.txtSoglia.getText());
+    	this.model.getCammino(soglia);
+    	this.txtResult.setText("Percorso: \n");
+    	for(Integer i:this.model.getRisultato()) {
+    		this.txtResult.appendText("Cromosoma "+i+"\n");
+    	}
+    	
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -57,6 +84,11 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model ;
+		
+		this.txtResult.appendText(this.model.creaGrafo()+"\n peso min: "+this.model.getPesoMin()+
+						", peso max: "+this.model.getPesoMax());
+		
+		
 		
 	}
 }
